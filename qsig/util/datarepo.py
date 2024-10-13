@@ -40,6 +40,10 @@ class DataRepo:
     def __init__(self,
                  storage_path):
         self._path = pathlib.Path(storage_path)
+        os.makedirs(self._path, exist_ok=True)
+
+    def __str__(self):
+        return f"DataRepo('{self._path}')"
 
     @staticmethod
     def _validate_names(library, key):
