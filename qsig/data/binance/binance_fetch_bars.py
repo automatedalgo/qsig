@@ -228,7 +228,7 @@ def fetch_binance_bars(universe,
 
     logging.info(f"bar interval: {bar_interval}")
     logging.info(f"names requested: {len(universe)}")
-    logging.info(f"dates requested: {(date_from - date_upto).days}")
+    logging.info(f"dates requested: {(date_upto - date_from).days}")
 
     logging.info(f"files requested: {report.files_requested}")
     logging.info(f"files already existed: {report.files_already_existed}")
