@@ -55,14 +55,12 @@ def main():
     # Plot
     # --------------------------------------------------------------------------
 
-    # Load the close prices data item, and then plot prices for BTC/UTC
+    # Load the close prices data item, and the graph the relative prices using a
+    # HTML based plot.
     close = lib.read("close")
-
     for col in close.columns:
         close[col] = close[col] / close[col].iloc[0]
     qsig.quick_plot(close)
-
-
 
 if __name__ == "__main__":
     main()
