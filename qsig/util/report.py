@@ -59,6 +59,14 @@ function __inflate_jsonenc(s)
 
       </script>
       <style>
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+
+
 </style>
 
 </head>
@@ -110,7 +118,7 @@ def build_plotly_line_chart(doc):
     x_values = ['{}'.format(i) for i in doc["data"]["x"]]
 
     html = list()
-    html.append("<div id=\"{}_fig\"  class=\"childimage\" style=\"width:100%;height:700px;\">".format(divid))
+    html.append("<div id=\"{}_fig\"  class=\"childimage\" style=\"width:100%;height:800px;\">".format(divid))
     html.append("<script>")
 
     # Build the javascript representations of the data values.  Rather than
