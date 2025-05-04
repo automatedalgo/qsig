@@ -40,10 +40,10 @@ class TickFileURI:
                  self.filename]
         return Path("/".join(parts))
 
-    def replace(self, dataset=None, filename=None):
+    def replace(self, dataset=None, filename=None, collection=None):
         return TickFileURI(
             filename=filename or self.filename,
-            collection=self.collection,
+            collection=collection or self.collection,
             venue=self.venue,
             dataset=dataset or self.dataset,
             date=self.date,
