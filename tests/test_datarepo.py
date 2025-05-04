@@ -81,3 +81,10 @@ def test_read_write_names():
 def test_key_with_period_ext():
     repo = DataRepo(storage_path="/var/tmp/DATAREPO_TEST")
     _test_key_with_period_ext(repo)
+
+
+def test_list_of_empty_repo():
+
+    repo = DataRepo(storage_path="/var/tmp/NEW_TEST")
+    libs = repo.list_libraries()
+    assert len(libs) == 0
