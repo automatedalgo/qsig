@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 class ExchCode(str, Enum):
     BINANCE = "binance"
+    BINANCE_FUTURES = "binance-futures"
     KUCOIN = "KCN"
     HTX = "HTX"
 
@@ -18,6 +19,7 @@ class ExchangeInfo:
 # Either load from file, or, have in code
 Exchange_Map = {
     ExchCode.BINANCE: ExchangeInfo("Binance", "binance", "BNC"),
+    ExchCode.BINANCE_FUTURES: ExchangeInfo("BinanceFutures", "binance-futures", "BNCFUT"),
     ExchCode.KUCOIN: ExchangeInfo("KuCoin", "kucoin", "KUC"),
     ExchCode.HTX: ExchangeInfo("HTX", "htc", "HTX")
 }
