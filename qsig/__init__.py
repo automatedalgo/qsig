@@ -1,5 +1,4 @@
 import logging
-import os
 import sys
 
 from .model.marketdata import BarInterval
