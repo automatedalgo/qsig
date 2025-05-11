@@ -43,7 +43,8 @@ def build_binance_trade_features_dataset(universe: List[Instrument],
                                          bar_interval,
                                          lib,
                                          skip_missing_files=False):
-    features = ['open', 'high', 'low', 'close', 'return']
+    features = ['open', 'high', 'low', 'close', 'return', 'volume',
+                'taker_buy_volume', 'taker_sell_volume']
 
     # To build the aggregated features dataframe, we initially build each
     # feature for a single name, over its full history.  So below the outer loop
@@ -52,9 +53,11 @@ def build_binance_trade_features_dataset(universe: List[Instrument],
         feature_map = {x: [] for x in features}
         logging.info(f"building features for {inst}")
         for date in date_range(date_from, date_upto):
+
+            # build the location of the Binance raw market data file
             uri = build_tick_file_uri(inst, date, bar_interval)
 
-            # check for presence of raw market data
+            # check for presence of raw market data, and if found, load
             try:
                 logging.info(f"reading binance market-data bars '{uri.path}'")
                 df = pd.read_parquet(uri.path)
@@ -72,7 +75,13 @@ def build_binance_trade_features_dataset(universe: List[Instrument],
             df = df.set_index("time", verify_integrity=True)
 
             for feature_name in features:
-                if feature_name != "return":
+                if feature_name == "return":
+                    continue  # generated later
+                elif feature_name == "taker_buy_volume":
+                    feature_map[feature_name].append(df['taker_buy_base_asset_volume'])
+                elif feature_name == "taker_sell_volume":
+                    feature_map[feature_name].append(df['volume'] - df['taker_buy_base_asset_volume'])
+                else:
                     feature_map[feature_name].append(df[feature_name])
             del feature_name, df, uri
 
@@ -103,7 +112,7 @@ def build_binance_trade_features_dataset(universe: List[Instrument],
             df = lib.read(part_name)
             if not df.empty:
                 dfs.append(df)
-            lib.delete(part_name)
+                lib.delete(part_name)
 
         final = pd.concat(dfs, axis=1)
 
