@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from qsig.data.binance.binance_data import build_binance_trade_features_dataset
 from qsig.data.binance.binance_fetch_bars import fetch_binance_bars
@@ -50,6 +51,17 @@ def main():
                                          date_upto,
                                          bin_interval,
                                          lib)
+
+    # --------------------------------------------------------------------------
+    # Repo explorer
+    # --------------------------------------------------------------------------
+
+    # We have earlier placed the binance data into our DataRepo object.  Here we
+    # just do a basic exploration of that libraries and keys exist, just to
+    # demonstrate some basic usage concepts.
+
+    logging.info(f"DataRepo library: {lib.name}")
+    logging.info(f"DataRepo keys: {lib.list_keys()}")
 
     # --------------------------------------------------------------------------
     # Plot
