@@ -1,5 +1,6 @@
 import datetime
 import logging
+import getpass
 
 from qsig.data.binance.binance_data import build_binance_trade_features_dataset
 from qsig.data.binance.binance_fetch_bars import fetch_binance_bars
@@ -26,7 +27,7 @@ def main():
     universe = [qsig.Instrument.from_ticker(t, qsig.ExchCode.BINANCE) for t in tickers]
 
     # repository to store the core pricing dataset
-    repo = qsig.DataRepo("/var/tmp/MY_DATA_REPO")
+    repo = qsig.DataRepo(f"/home/{getpass.getuser()}/DATAREPO")
 
     # --------------------------------------------------------------------------
     # Fetch the raw market data (OHLC bars) from Binance. These files are stored
