@@ -4,7 +4,11 @@ import os
 
 
 def tick_data_home() -> pathlib.Path:
-    return pathlib.Path(f"/home/{getpass.getuser()}/apex/data/tickdata")
+    tick_data_home = os.environ.get("QSIG_TICKDATA_DIR", None)
+    if tick_data_home is None:
+        return pathlib.Path(f"/home/{getpass.getuser()}/mdhome/tickdata")
+    else:
+        return pathlib.Path(tick_data_home)
 
 
 def reports_home() -> pathlib.Path:
