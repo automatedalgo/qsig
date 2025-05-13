@@ -4,15 +4,17 @@ QSig is a free and open source Python based platform to research quantitative si
 
 QSig provides the building blocks to access vendor tick-data, to transform that into research data, and to help early stage alpha signal research.
 
-QSig provides the following components:
+QSig currently provides the following components:
 
-- downloaders to fetch vendor data from binance, Tardis
+- downloaders to fetch vendor data from Binance and Tardis
 - conventions on how to store
 - dataframe/timeseries database that helps you organise your research data
 - plotting utilities
+
+In the roadmap to come next are:
+
 - sample indicators
 - basic backtester
-
 
 ## Where to start
 
