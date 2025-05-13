@@ -8,6 +8,26 @@ from qsig.model.instrument import Instrument, Exchange_Map
 from qsig.util.time import date_range
 from qsig.data.tickfiles import TickFileURI
 
+
+# Build the locator for binned trades files
+def build_trade_bin_uri(instrument: Instrument,
+                        date: dt.date,
+                        bin_rule: str):
+    # because we are building derived data, we store under vendor 'qsig'
+    collection="qsig"
+    symbol = f"{instrument.base}{instrument.quote}"
+    filename=f"{symbol}.parquet"
+    dataset=f"trades@{bin_rule}"
+    uri = TickFileURI(
+        filename=filename,
+        collection=collection,
+        venue=Exchange_Map[instrument.exch].slug,
+        dataset=dataset,
+        date=date,
+        symbol=symbol)
+    return uri
+
+
 # Read a raw tardis CSV file, as its looks after downloading from Tardis.
 def read_raw_csv_tick_data(filename: str,
                            to_datetime=True,
@@ -116,10 +136,8 @@ def create_trade_bins(instruments: List[Instrument],
                 symbol=symbol)
 
             # location of the output bin file
-            output_uri = input_uri.replace(
-                collection="qsig",
-                dataset=f"{input_uri.dataset}@{bin_rule}",
-                filename=f"{input_uri.symbol}.parquet"
-            )
+            output_uri = build_trade_bin_uri(inst,
+                                             date,
+                                             bin_rule)
 
             _create_trade_bins_file(input_uri, output_uri, bin_rule)

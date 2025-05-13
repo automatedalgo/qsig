@@ -31,7 +31,6 @@ class TardisDownloader:
                        dataset: str,
                        exchange: str,
                        symbol: str):
-
         url = f"{self.base_url}/{exchange}/{dataset}/{year:04d}/{month:02d}/{day:02d}/{symbol}.csv.gz"
 
         local_uri = TickFileURI(
@@ -58,6 +57,9 @@ class TardisDownloader:
 
             with open(local_uri.path, "wb") as f:
                 f.write(response.content)
+        return url
+
+
 
 
     def fetch_csv_files_for_dates(self,
