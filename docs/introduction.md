@@ -168,6 +168,9 @@ writing to a shared data repository. This facilitates a clean separation of
 concerns across different stages of research and encourages the normalisation of
 dataframes.
 
+
+![DataRepo based workflow](./datarepo_workflow.svg)
+
 The following code shows how to create a data repo and write the full history
 trade bins.  The dataframe is stored at a named *key* within a named *library*.
 
