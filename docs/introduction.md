@@ -178,8 +178,8 @@ trade bins.  The dataframe is stored at a named *key* within a named *library*.
     lib = repo.get_library("tardis")
     lib.write(key=f"trade_bins@{bin_rule}", data=data)
 
-To complete this example, in a later in a signal script, we could fetch this
-dataframe using the following code:
+To complete this example, in a later signal script we could fetch this dataframe
+using the following code:
 
     bin_rule = "30s"
     repo = qsig.DataRepo(f"/home/{getpass.getuser()}/DATAREPO")
