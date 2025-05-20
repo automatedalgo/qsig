@@ -13,8 +13,10 @@ from qsig.data.tickfiles import TickFileURI
 def build_trade_bin_uri(instrument: Instrument,
                         date: dt.date,
                         bin_rule: str):
-    # because we are building derived data, we store under vendor 'qsig'
-    collection="qsig"
+    # place the trade-bins into the 'tardis' location, because these files are
+    # essentially directly derived from the raw trade file - they are just a
+    # different view of the raw data
+    collection="tardis"
     symbol = f"{instrument.base}{instrument.quote}"
     filename=f"{symbol}.parquet"
     dataset=f"trades@{bin_rule}"
