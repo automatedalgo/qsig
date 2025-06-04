@@ -8,6 +8,7 @@ from qsig.model.instrument import Instrument, ExchCode
 from qsig.util.time import date_range
 import qsig
 
+
 def main():
     qsig.init()
 
@@ -72,7 +73,7 @@ def main():
     # Create aggregated bins
     # ----------------------------------------------------------------------
 
-    # For research we prefer to load a single dataframe that aggregates the bins
+    # For research, we prefer to load a single dataframe that aggregates the bins
     # across whole time period of interest.  We create that here, by loading
     # each dataframe and aggregating.
     dataframes = []
