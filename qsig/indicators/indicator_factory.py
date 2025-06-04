@@ -91,7 +91,6 @@ class IndicatorFactory:
         ind_type = indicator_class.CODE
         assert ind_type not in self._ind_type_map
         self._ind_type_map[ind_type] = indicator_class
-        print(f"registered indicator type '{ind_type}'")
 
     def create(self, cls: str, config: dict, container: IndicatorContainer):
         ind_type = cls or config["type"]
