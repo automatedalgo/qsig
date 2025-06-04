@@ -21,7 +21,7 @@ class IndicatorCache(IndicatorContainer):
         # determine if the expression is an indicator class or an inline
         # indicator expression
         if "(" in cls:
-            indicator = IndicatorFactory.instance().create_expr(cls, self)
+            indicator = IndicatorFactory.instance().create_from_expr(cls, self)
         else:
             if config is None:
                 config = kwargs
@@ -32,7 +32,7 @@ class IndicatorCache(IndicatorContainer):
 
         name = indicator.name
         if name in self._indicators:
-            raise Exception("{} cannot add duplicate indicactor '{}'".format(
+            raise Exception("{} cannot add duplicate indicator '{}'".format(
                 self.__class__.__name__, name))
 
         self._indicators[name] = indicator

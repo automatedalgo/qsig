@@ -66,11 +66,15 @@ def _test_indicator_expressions():
 
 
 class IndicatorFactory:
+    """Singleton factory that can create registered indicators"""
 
     _instance  = None
+    _initialised = False
 
     def __init__(self):
-        self._ind_type_map = dict()
+        if not self.__class__._initialised:
+            self._ind_type_map = dict()
+            self.__class__._initialised = True
 
     def __new__(cls):
         if cls._instance is None:
@@ -98,7 +102,8 @@ class IndicatorFactory:
         ind_instance = ind_class.create(config, container)
         return ind_instance
 
-    def create_expr(self, expr: str, container: IndicatorContainer):
+    def create_from_expr(self, expr: str, container: IndicatorContainer):
+        """Create an indicator from an expression string, eg 'SMA(1m)'"""
         name, ind_type, params, ind_src = _parse_indicator_expression(expr)
         assert isinstance(ind_type, str)
         ind_class = self._ind_type_map.get(ind_type)
@@ -106,3 +111,7 @@ class IndicatorFactory:
             raise Exception(f"IndicatorFactory doesn't support indicator type '{ind_type}'")
         ind_instance = ind_class.create(None, container, name, params, ind_src)
         return ind_instance
+
+    def list(self):
+        """Return list of available indicators"""
+        return sorted(self._ind_type_map.keys())
