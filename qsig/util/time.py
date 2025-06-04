@@ -11,7 +11,11 @@ def date_range(date_from, date_upto):
 
 # Given a time period string such as "10m" convert that into an integer number
 # of seconds.
-def parse_time_period(period: str):
+#
+# TODO: support fractional seconds here, in both str and as float
+def parse_time_period(period: str|int) -> int:
+    if isinstance(period, int):
+        return period
     period = period.strip()
     assert len(period)>=2
     assert period[0] != "0"
