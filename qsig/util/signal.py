@@ -17,16 +17,14 @@ def build_signal_events(signal, threshold, fill=np.nan):
 
 def calc_fwd_returns(prices: pd.Series,
                      prices_period_sec: int,
-                     study_period_sec: int):
+                     study_period_sec: int,
+                     as_bps = False):
     assert isinstance(prices, pd.Series)
-
     # number of src bins to make up the study period
     window_period = int(study_period_sec / prices_period_sec)
     assert window_period * prices_period_sec == study_period_sec
-
     fret = (prices.shift(-window_period) / prices) - 1.0
-    fret *= 1e4
-    return fret
+    return (fret * 1e4) if as_bps else fret
 
 
 # Calculate the time density of a series. For example the trade volume per
