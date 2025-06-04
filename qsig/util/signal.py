@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import math
+
 
 # Calculate the return from start to end, returning the value in bips
 def return_bps(start: float, end: float):
@@ -18,7 +20,7 @@ def build_signal_events(signal, threshold, fill=np.nan):
 def calc_fwd_returns(prices: pd.Series,
                      prices_period_sec: int,
                      study_period_sec: int,
-                     as_bps = False):
+                     as_bps=False):
     assert isinstance(prices, pd.Series)
     # number of src bins to make up the study period
     window_period = int(study_period_sec / prices_period_sec)
@@ -41,3 +43,23 @@ def calc_density(data: pd.Series,
     roll_sum = data.rolling(window=window_period).sum()
     roll_den = roll_sum / study_period_sec
     return roll_den
+
+
+def halflife_to_span(half_life, granularity):
+    """
+    Convert exponential decay half-life into TA-Lib/Pandas EMA span. The
+    half-life is expressed as a multiple of the granularity.  For example, if
+    the half-life and the underlying data granularity are in the same units,
+    granularity should be set to 1.
+
+    Parameters:
+    - half_life (float): Desired half-life of decay.
+    - granularity (float): Time interval between data points.
+
+    Returns:
+    - float: Equivalent Pandas EMA span / TA-Lib timeperiod
+    """
+    h = half_life / granularity
+    alpha = 1 - math.exp(-math.log(2) / h)
+    span = (2 / alpha) - 1
+    return span  # let user do the rounding
