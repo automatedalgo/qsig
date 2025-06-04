@@ -2,11 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-# Standalone demonstration of ewma, to compare to indicator implementations
+# Standalone demonstration of pure ewma decay, to compare to indicator
+# implementations
 
 # Create a time index (1-minute intervals)
-index = pd.date_range(start="2024-01-01 09:00:00", periods=30, freq='T')
-
+index = pd.date_range(start="2024-01-01 09:00:00", periods=30, freq='min')
 
 # Create time series: starts at 100, then drops to 0
 df = pd.DataFrame(index=index)
