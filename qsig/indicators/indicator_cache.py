@@ -2,21 +2,28 @@ import pandas as pd
 
 from qsig.model.instrument import Instrument
 from .indicator_factory import IndicatorFactory, IndicatorContainer
+from typing import Union
 
 
 class IndicatorCache(IndicatorContainer):
 
     def __init__(self,
-                 instrument: Instrument):
+                 instrument: Union[Instrument, None]):
         self._indicators = dict()
         self._inst = instrument
         self._data = None
         self._window_sec = 0
 
     def __repr__(self):
-        return f"{self.__class__.__name__}({self._inst.ticker()})"
 
-    def add_indicator(self, cls: str, config: dict=None, **kwargs):
+        if isinstance(self._inst, Instrument):
+            return f"{self.__class__.__name__}({self._inst.ticker()})"
+        elif self._inst is None:
+            return f"{self.__class__.__name__})"
+        else:
+            return f"{self.__class__.__name__}({self._inst}))"
+
+    def add_indicator(self, cls: str, config: dict = None, **kwargs):
 
         # determine if the expression is an indicator class or an inline
         # indicator expression
@@ -26,7 +33,7 @@ class IndicatorCache(IndicatorContainer):
             if config is None:
                 config = kwargs
             else:
-                assert len(kwargs)==0, "cannot provide config and kwargs"
+                assert len(kwargs) == 0, "cannot provide config and kwargs"
 
             indicator = IndicatorFactory.instance().create(cls, config, self)
 
