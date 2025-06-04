@@ -73,7 +73,6 @@ class IndicatorCache(IndicatorContainer):
             return self._data[source]
         raise Exception(f"{self} does not contain data or indicator named '{source}'")
 
-
     def compute(self):
         """Compute all indicators"""
 
@@ -83,11 +82,13 @@ class IndicatorCache(IndicatorContainer):
         for indicator in self._indicators.values():
             indicator.compute()
 
-
-    def to_frame(self):
+    def to_frame(self, skip_non_computed=False):
         results = [self._data]
         for indicator in self._indicators.values():
-            results.extend(indicator.result_list())
+            if indicator.is_computed():
+                results.extend(indicator.result_list())
+            elif skip_non_computed == False:
+                raise Exception(f"indicator not yet computed, for '{indicator}'")
         df = pd.concat(results, axis=1)
         df.sort_index(axis=1, inplace=True)
         return df
