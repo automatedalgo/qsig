@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from enum import Enum, auto
 import pandas as pd
 
-from .indicator_cache import IndicatorContainer
+from .indicator_container import IndicatorContainer
+
 
 class BaseIndicator(ABC):
     """Base class for all indicators"""
@@ -12,9 +13,9 @@ class BaseIndicator(ABC):
         COMPUTING = auto()
         COMPUTED = auto()
 
-    def __init__(self, owner: IndicatorContainer, indicator_name: str):
-        assert self.CODE is not None
-        assert '(' not in self.CODE
+    def __init__(self, code: str, owner: IndicatorContainer, indicator_name: str):
+        assert code is not None
+        assert '(' not in code
         self._owner = owner
         self._name = indicator_name
         self._results = dict()
@@ -39,7 +40,7 @@ class BaseIndicator(ABC):
         return self._name
 
     def __repr__(self):
-         return "{}".format(self.__class__.__name__)
+        return "{}".format(self.__class__.__name__)
 
     def __str__(self):
         return self._name
@@ -51,7 +52,7 @@ class BaseIndicator(ABC):
     def result(self, slot=""):
         data = self._results.get(slot)
         if data is None:
-            self.compute() # data not ready, so compute on demand
+            self.compute()  # data not ready, so compute on demand
             data = self._results.get(slot)
         return data
 
@@ -77,12 +78,12 @@ class UnaryIndicator(BaseIndicator, ABC):
     # Default input to take if not provided
     DEFAULT_SOURCE = "close"
 
-    def __init__(self, owner: IndicatorContainer, params: list, source: str,
-                 name: str=None):
+    def __init__(self, code: str, owner: IndicatorContainer, params: list,
+                 source: str, name: str = None):
 
         # build indicator name to be more concise, usable as an ID
         if name is None:
-            name = "{}({})".format(self.CODE, ",".join(params))
+            name = "{}({})".format(code, ",".join(params))
             if source:
                 name = f"{name}[{source}]"
         else:
@@ -95,16 +96,16 @@ class UnaryIndicator(BaseIndicator, ABC):
             _repr += ",".join([str(x) for x in params])
         else:
             _repr += params
+
         _repr += f")[{source or self.__class__.DEFAULT_SOURCE}]"
         _repr += f"'{name}'"
         self._repr = _repr
 
-
-        super().__init__(owner, name)
+        super().__init__(code, owner, name)
         self.source = source or self.__class__.DEFAULT_SOURCE
 
     def __repr__(self):
-         return self._repr
+        return self._repr
 
     @staticmethod
     def _single_source(sources):
