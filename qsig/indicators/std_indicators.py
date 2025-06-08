@@ -12,8 +12,9 @@ class SMA(UnaryIndicator):
 
     def __init__(self, owner, window: int|str, input_col: str, name: str = None):
         params = [window]
-        super().__init__(owner, params, input_col, name=name)
+        super().__init__(self.CODE, owner, params, input_col, name=name)
         self.window_sec = qsig.util.time.parse_time_period(window)
+
 
     def _compute(self):
         data = self._owner.find(self.source)
@@ -45,7 +46,7 @@ class DEN(UnaryIndicator):
 
     def __init__(self, owner, window: int|str, input_col: str, name: str = None):
         params = [window]
-        super().__init__(owner, params, input_col, name=name)
+        super().__init__(self.CODE, owner, params, input_col, name=name)
         self.window_sec = qsig.util.time.parse_time_period(window)
 
 
@@ -80,7 +81,7 @@ class RET(UnaryIndicator):
 
     def __init__(self, owner, window: int|str, input_col: str = None, name: str = None):
         params = [window]
-        super().__init__(owner, params, input_col, name=name)
+        super().__init__(self.CODE, owner, params, input_col, name=name)
         self.window_sec = qsig.util.time.parse_time_period(window)
 
     def _compute(self):
@@ -116,7 +117,7 @@ class FWD(UnaryIndicator):
 
     def __init__(self, owner, window: int|str, input_col: str = None, name=None):
         params = [window]
-        super().__init__(owner, params, input_col, name=name)
+        super().__init__(self.CODE, owner, params, input_col, name=name)
         self.window_sec = qsig.util.time.parse_time_period(window)
 
     def _compute(self):
@@ -153,7 +154,7 @@ class EWMA(UnaryIndicator):
     def __init__(self, owner, halflife: int|float|str, input_col: str = None,
                  name:str = None):
         params = [halflife]
-        super().__init__(owner, params, input_col, name)
+        super().__init__(self.CODE, owner, params, input_col, name)
         self.halflife = qsig.util.time.parse_time_period(halflife)
 
     def _compute(self):

@@ -1,20 +1,12 @@
 import re
-from abc import ABC, abstractmethod
 
+from .base_indicators import BaseIndicator
+from .indicator_container import IndicatorContainer
+from .generic_indicator import GenericIndicator
 
 RE_PREFIX = re.compile(r'^([\w\s]*=\s*)(\w.*)$')
 RE_FUNC1 = re.compile(r'^(\w+)\((.*)\)\[(.*?)\]$')
 RE_FUNC2 = re.compile(r'^(\w+)\((.*)\)$')
-
-class IndicatorContainer(ABC):
-
-    @abstractmethod
-    def find(self, source: str):
-        pass
-
-    @abstractmethod
-    def interval(self):
-        pass
 
 
 def _parse_indicator_expression(expr: str):
@@ -29,8 +21,8 @@ def _parse_indicator_expression(expr: str):
     matched = RE_FUNC1.match(expr)
     if matched:
         ind_type = matched[1]
-        ind_params = matched[2].split(",")
-        ind_source = matched[3].split(",")
+        ind_params = [x.strip() for x in matched[2].split(",")]
+        ind_source = [x.strip() for x in matched[3].split(",")]
         return name, ind_type, ind_params, ind_source
     matched = RE_FUNC2.match(expr)
     if matched:
@@ -45,7 +37,7 @@ def _parse_indicator_expression(expr: str):
 def _test_indicator_expressions():
 
     def _test(expr: str):
-        expr = ''.join(expr.split()) # remove all whitespace
+        expr = ''.join(expr.split())  # remove all whitespace
         ind_name, ind_type, ind_params, ind_source = _parse_indicator_expression(expr)
         ind_params_str = ",".join(ind_params) if ind_params else ""
         rebuild = "{}({})".format(ind_type, ind_params_str)
@@ -68,7 +60,7 @@ def _test_indicator_expressions():
 class IndicatorFactory:
     """Singleton factory that can create registered indicators"""
 
-    _instance  = None
+    _instance = None
     _initialised = False
 
     def __init__(self):
@@ -87,10 +79,18 @@ class IndicatorFactory:
             IndicatorFactory._instance = IndicatorFactory()
         return IndicatorFactory._instance
 
-    def register(self, indicator_class: type):
-        ind_type = indicator_class.CODE
-        assert ind_type not in self._ind_type_map
-        self._ind_type_map[ind_type] = indicator_class
+    def register(self,
+                 indicator_class: type,
+                 indicator_details=None):
+        if isinstance(indicator_class, type):
+            ind_type = indicator_class.CODE
+            assert ind_type not in self._ind_type_map
+            self._ind_type_map[ind_type] = indicator_class
+        else:
+            ind_type = indicator_class
+            assert ind_type not in self._ind_type_map
+            self._ind_type_map[ind_type] = indicator_details
+
 
     def create(self, cls: str, config: dict, container: IndicatorContainer):
         ind_type = cls or config["type"]
@@ -98,18 +98,34 @@ class IndicatorFactory:
         ind_class = self._ind_type_map.get(ind_type)
         if ind_class is None:
             raise Exception(f"IndicatorFactory doesn't support indicator type '{ind_type}'")
-        ind_instance = ind_class.create(config, container)
-        return ind_instance
+
+        if issubclass(ind_class, BaseIndicator):
+            ind_instance = ind_class.create(config, container)
+            return ind_instance
+        else:
+            details = ind_class
+            ind = GenericIndicator.create_from_config(container, ind_type, config, details)
+            return ind
+
 
     def create_from_expr(self, expr: str, container: IndicatorContainer):
         """Create an indicator from an expression string, eg 'SMA(1m)'"""
         name, ind_type, params, ind_src = _parse_indicator_expression(expr)
         assert isinstance(ind_type, str)
-        ind_class = self._ind_type_map.get(ind_type)
+        ind_class = self._ind_type_map.get(ind_type, None)
         if ind_class is None:
             raise Exception(f"IndicatorFactory doesn't support indicator type '{ind_type}'")
-        ind_instance = ind_class.create(None, container, name, params, ind_src)
-        return ind_instance
+        if issubclass(ind_class, BaseIndicator):
+            if ind_class is None:
+                raise Exception(f"IndicatorFactory doesn't support indicator type '{ind_type}'")
+            ind_instance = ind_class.create(None, container, name, params, ind_src)
+            return ind_instance
+        else:
+            details = ind_class
+            ind = GenericIndicator.create_from_inline(
+                container, name, ind_type, params, ind_src, details)
+            return ind
+
 
     def list(self):
         """Return list of available indicators"""

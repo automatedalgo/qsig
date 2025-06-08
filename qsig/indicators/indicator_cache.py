@@ -1,7 +1,8 @@
 import pandas as pd
 
 from qsig.model.instrument import Instrument
-from .indicator_factory import IndicatorFactory, IndicatorContainer
+from .indicator_factory import IndicatorFactory
+from .indicator_container import IndicatorContainer
 from typing import Union
 
 
@@ -43,7 +44,7 @@ class IndicatorCache(IndicatorContainer):
                 self.__class__.__name__, name))
 
         self._indicators[name] = indicator
-        print(f"added indicator {indicator} -- {repr(indicator)}")
+        print(f"added indicator '{indicator}' = {repr(indicator)}")
         return indicator
 
     def add_data(self, data: pd.DataFrame):
