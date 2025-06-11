@@ -79,6 +79,14 @@ class IndicatorFactory:
             IndicatorFactory._instance = IndicatorFactory()
         return IndicatorFactory._instance
 
+    @staticmethod
+    def has_talib():
+        try:
+            import talib
+            return True
+        except ModuleNotFoundError:
+            return False
+
     def register(self,
                  indicator_class: type,
                  indicator_details=None):

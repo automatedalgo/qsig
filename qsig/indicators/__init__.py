@@ -15,6 +15,12 @@ from .std_indicators import (
     EWMA
 )
 
+try:
+    import talib
+    from . import talib_indicators
+except ModuleNotFoundError as e:
+    print("TA-Lib cannot be imported, TA-Lib indicators will not be available")
+
 __all__ = [
     "IndicatorContainer",
     "BaseIndicator",
