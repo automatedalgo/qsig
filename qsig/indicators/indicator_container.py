@@ -4,9 +4,5 @@ from abc import ABC, abstractmethod
 class IndicatorContainer(ABC):
 
     @abstractmethod
-    def find(self, source: str):
-        pass
-
-    @abstractmethod
-    def interval(self):
+    def find(self, input_: str, asset: str = None):
         pass

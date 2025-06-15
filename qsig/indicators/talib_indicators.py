@@ -2,7 +2,7 @@ import talib
 from dataclasses import dataclass
 import pandas as pd
 
-from qsig.util.signal import halflife_to_span
+from qsig.util.signal import halflife_to_span, data_interval
 from .indicator_factory import IndicatorFactory
 import qsig.util.time
 
@@ -16,7 +16,7 @@ class EMA:
 
     @staticmethod
     def calc(owner, params: Params, data: pd.Series):
-        span = round(halflife_to_span(params.halflife, owner.interval()))
+        span = round(halflife_to_span(params.halflife, data_interval(data)))
         return talib.EMA(data, span)
 
     # Parse a config object and returns the Params and indicator input
