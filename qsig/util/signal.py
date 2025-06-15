@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 import math
 
+# Return the total seconds for a datafame
+def data_interval(data):
+    idx = data.index
+    return (idx[1] - idx[0]).total_seconds()
 
 # Calculate the return from start to end, returning the value in bips
 def return_bps(start: float, end: float):
