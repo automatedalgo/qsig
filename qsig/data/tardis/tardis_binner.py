@@ -51,7 +51,7 @@ def read_raw_csv_tick_data(filename: str,
 # Create a DataFrame of trade bins from a DataFrame of raw trades.
 def calc_trade_bins(date: dt.date, trades: pd.DataFrame, rule: str) -> pd.DataFrame:
     # value values for `rule` are <N>s or N<min> or N<h>
-    assert rule.endswith("min") or rule.endswith("s") or rule.endswith("h")
+    assert rule.endswith("min") or rule.endswith("s") or rule.endswith("h"), "invalid bin rule suffix"
 
     # calc simple derived values
     trades["value"] = trades["price"] * trades["amount"]
@@ -126,7 +126,7 @@ def create_trade_bins(instruments: List[Instrument],
     for date in date_range(date_from, date_upto):
         for inst in instruments:
             symbol = f"{inst.base}{inst.quote}"
-            logging.info(f"generating bins for {inst} on {date}")
+            logging.info(f"generating trade bins for {inst} on {date}")
 
             # location of the input trades file
             input_uri = TickFileURI(
