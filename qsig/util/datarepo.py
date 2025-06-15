@@ -125,7 +125,11 @@ class DataRepo:
         meta_data = self._load_item_meta(library, key)
         data_filename = full_path / meta_data["filename"]
         if meta_data["type"] == "dataframe":
-            return pd.read_parquet(data_filename)
+            data = pd.read_parquet(data_filename)
+            data_name = meta_data.get("data_name")
+            if data_name is not None:
+                data.name = data_name
+            return data
         return None
 
     def _delete_item(self, library: str, key: str):
@@ -138,6 +142,13 @@ class DataRepo:
         os.unlink(data_filename)
 
     def _write_item(self, library: str, key: str, data):
+        # try to get the data name - can be present on dataframes
+        data_name = None
+        try:
+            data_name = data.name
+        except Exception as _:
+            pass
+
         self._validate_names(library, key)
         meta_filename = self._build_meta_path(library, key)
         full_path = self._path / library
@@ -153,6 +164,8 @@ class DataRepo:
                 "user": getpass.getuser(),
                 "key": key
             }
+            if data_name is not None:
+                meta["data_name"] = data_name
         else:
             raise DataRepoError("data type not supported")
 
