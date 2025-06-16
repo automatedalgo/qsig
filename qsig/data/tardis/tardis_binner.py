@@ -1,9 +1,10 @@
 import datetime as dt
 import pandas as pd
 import logging
-from typing import List
+from typing import List, Union
 import os
 
+from qsig import BarInterval
 from qsig.model.instrument import Instrument, Exchange_Map
 from qsig.util.time import date_range
 from qsig.data.tickfiles import TickFileURI
@@ -12,14 +13,14 @@ from qsig.data.tickfiles import TickFileURI
 # Build the locator for binned trades files
 def build_trade_bin_uri(instrument: Instrument,
                         date: dt.date,
-                        bin_rule: str):
+                        bin_rule: Union[str, BarInterval]):
     # place the trade-bins into the 'tardis' location, because these files are
     # essentially directly derived from the raw trade file - they are just a
     # different view of the raw data
-    collection="tardis"
+    collection = "tardis"
     symbol = f"{instrument.base}{instrument.quote}"
-    filename=f"{symbol}.parquet"
-    dataset=f"trades@{bin_rule}"
+    filename = f"{symbol}.parquet"
+    dataset = f"trades@{bin_rule}"
     uri = TickFileURI(
         filename=filename,
         collection=collection,
@@ -122,7 +123,7 @@ def _create_trade_bins_file(trades_uri: TickFileURI,
 def create_trade_bins(instruments: List[Instrument],
                       date_from: dt.date,
                       date_upto: dt.date,
-                      bin_rule: str):
+                      bin_rule: Union[str, BarInterval]):
     for date in date_range(date_from, date_upto):
         for inst in instruments:
             symbol = f"{inst.base}{inst.quote}"
