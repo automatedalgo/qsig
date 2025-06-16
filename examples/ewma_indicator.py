@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-from qsig.indicators import IndicatorCache, IndicatorFactory
+from qsig.indicators import ItemIndicatorCache, IndicatorFactory
 
 # ------------------------------------------------------------------------------
 # Standalone demonstration of EWMA indicator decay, for a couple of decay rates.
@@ -19,7 +19,7 @@ data[0:11] = 100.0
 
 # Create indicator infrastructure
 factory = IndicatorFactory()
-cache = IndicatorCache(instrument=None)
+cache = ItemIndicatorCache(instrument=None)
 cache.add_data(data)
 
 # Create indicators

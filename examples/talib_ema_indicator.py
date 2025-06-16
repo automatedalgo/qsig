@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-from qsig.indicators import IndicatorCache, IndicatorFactory
+from qsig.indicators import ItemIndicatorCache, IndicatorFactory
 
 # ------------------------------------------------------------------------------
 # Standalone demonstration of using TA-Lib EMA indicator decay, for a couple of
@@ -22,7 +22,7 @@ data[0:3*60 + 1] = 100.0
 
 # Create indicator infrastructure
 factory = IndicatorFactory()
-cache = IndicatorCache(instrument=None)
+cache = ItemIndicatorCache(instrument=None)
 cache.add_data(data.ffill())
 
 # Create indicators

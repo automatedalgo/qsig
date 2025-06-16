@@ -5,7 +5,7 @@ from .indicator_cache import IndicatorContainer
 
 from .indicator_factory import IndicatorFactory
 
-from .indicator_cache import IndicatorCache
+from .indicator_cache import ItemIndicatorCache
 
 from .std_indicators import (
     SMA,
@@ -26,7 +26,7 @@ __all__ = [
     "BaseIndicator",
     "UnaryIndicator",
     "IndicatorFactory",
-    "IndicatorCache",
+    "ItemIndicatorCache",
     "SMA",
     "DEN",
     "RET",
