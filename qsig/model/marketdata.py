@@ -70,6 +70,18 @@ class BarInterval:
         else:
             raise ValueError("TimeUnit not supported")
 
+
+    def to_pandas_resample_rule(self):
+        if self.unit == TimeUnit.SECOND:
+            return f"{self.count}s"
+        elif self.unit == TimeUnit.MINUTE:
+            return f"{self.count}min"
+        elif self.unit == TimeUnit.HOUR:
+            return f"{self.count}h"
+        else:
+            raise ValueError("TimeUnit not supported")
+
+
     @staticmethod
     def parse(interval: str):
         assert len(interval) > 1
