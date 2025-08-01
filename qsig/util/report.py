@@ -158,6 +158,7 @@ def build_plotly_line_chart(doc):
 
         triangle_green = """{ symbol: 'triangle-up', size: 10, color: 'green'}"""
         triangle_red = """{symbol: 'triangle-down', size: 10, color: 'red'}"""
+        circle_yellow = """{symbol: 'circle', size: 10, color: 'yellow'}"""
 
         # markers
         if style == "red-triangle":
@@ -166,6 +167,9 @@ def build_plotly_line_chart(doc):
         if style == "green-triangle":
             html.append("  mode: 'markers',")
             html.append(f"  marker: {triangle_green}")
+        if style == "yellow-circle":
+            html.append("  mode: 'markers',")
+            html.append(f"  marker: {circle_yellow}")
 
         html.append("};")
         html.append("")
