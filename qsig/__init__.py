@@ -9,6 +9,8 @@ from .util.datarepo import DataRepo, DataRepoError
 
 __version__ = "0.1.0"
 
+BPS = 1.0e4
+
 def init(debug=False):
     fmt = logging.Formatter("%(asctime)s.%(msecs)03d | %(levelname)s | %(message)s", "%Y-%m-%d %H:%M:%S")
     handler = logging.StreamHandler(sys.stdout)
