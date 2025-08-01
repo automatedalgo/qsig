@@ -13,11 +13,12 @@ def return_bps(start: float, end: float):
 
 
 # Given a time-series representing a signal, return a binary event version, with
-# a 1 for when the signal exceeds the threshold and a NaN in all other places
-def build_signal_events(signal, threshold, fill=np.nan):
-    events = pd.Series(index=signal.index, data=fill)
-    events.name = "events"
+# a +/- 1 for when the signal exceeds the threshold and a NaN in all other
+# places
+def signal_threshold(signal, threshold, fill=np.nan):
+    events = pd.Series(index=signal.index, data=fill, name="events")
     events[signal > threshold] = 1
+    events[signal < -threshold] = -1
     return events
 
 
@@ -67,3 +68,8 @@ def halflife_to_span(half_life, granularity):
     alpha = 1 - math.exp(-math.log(2) / h)
     span = (2 / alpha) - 1
     return span  # let user do the rounding
+
+
+def zscore(s: pd.Series):
+    z = (s - s.mean()) / s.std()
+    return z
