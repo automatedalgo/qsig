@@ -50,8 +50,10 @@ def read_raw_csv_tick_data(filename: str,
 
 
 # Create a DataFrame of trade bins from a DataFrame of raw trades.
-def calc_trade_bins(date: dt.date, trades: pd.DataFrame, rule: str) -> pd.DataFrame:
+def calc_trade_bins(date: dt.date, trades: pd.DataFrame, rule: Union[str,BarInterval]) -> pd.DataFrame:
     # value values for `rule` are <N>s or N<min> or N<h>
+    if isinstance(rule, BarInterval):
+        rule = rule.to_pandas_resample_rule()
     assert rule.endswith("min") or rule.endswith("s") or rule.endswith("h"), "invalid bin rule suffix"
 
     # calc simple derived values
@@ -124,6 +126,7 @@ def create_trade_bins(instruments: List[Instrument],
                       date_from: dt.date,
                       date_upto: dt.date,
                       bin_rule: Union[str, BarInterval]):
+    files = []
     for date in date_range(date_from, date_upto):
         for inst in instruments:
             symbol = f"{inst.base}{inst.quote}"
@@ -144,3 +147,5 @@ def create_trade_bins(instruments: List[Instrument],
                                              bin_rule)
 
             _create_trade_bins_file(input_uri, output_uri, bin_rule)
+            files.append(output_uri.path)
+    return files
