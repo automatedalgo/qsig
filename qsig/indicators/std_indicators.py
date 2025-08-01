@@ -92,7 +92,7 @@ class RET(UnaryIndicator):
         data = self._owner.find(self.source)
         periods = int(self.window_sec / data_interval(data))
         assert (periods * data_interval(data)) == self.window_sec
-        result = data.pct_change(periods=periods, fill_method=None)*1e4
+        result = data.pct_change(periods=periods, fill_method=None)
         self._store_result(result)
 
     @classmethod
