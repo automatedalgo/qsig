@@ -6,7 +6,8 @@ from .indicator_container import IndicatorContainer
 
 
 class BaseIndicator(ABC):
-    """Base class for all indicators"""
+    """Base class for all indicators. Each indicator will have a unique 'name',
+       which will identify it within its parent IndicatorContainer."""
 
     class _State(Enum):
         CLEAR = auto()
